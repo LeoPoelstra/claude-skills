@@ -1,0 +1,95 @@
+# Una vez por mes chequea si salieron versiones nuevas de Impeccable,
+# UI/UX Pro Max y SkillUI. Si hay, abre un issue (te llega por mail) con los
+# pasos para actualizar tu Mac. Al cerrar ese issue, anota las versiones nuevas
+# en diseno-web/versiones.json para no volver a avisar por ellas.
+#
+# No actualiza nada solo: estas herramientas viven en tu Mac y GitHub no
+# tiene acceso a ella.
+
+name: Actualizaciones de diseño web
+
+on:
+  schedule:
+    - cron: "17 12 1 * *" # el día 1 de cada mes, 9:17 de Argentina
+  workflow_dispatch: # botón "Run workflow" para chequear a mano
+  issues:
+    types: [closed]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: actualizaciones-diseno-web
+  cancel-in-progress: false
+
+jobs:
+  chequear:
+    if: github.event_name != 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comparar versiones
+        id: cmp
+        run: bash .github/scripts/chequear-versiones.sh
+
+      - name: Avisar con un issue
+        if: steps.cmp.outputs.hay == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create actualizaciones --color FBCA04 \
+            --description "Versiones nuevas de herramientas de diseño web" 2>/dev/null || true
+          n="$(gh issue list --label actualizaciones --state open \
+                --json number --jq '.[0].number // empty')"
+          if [ -z "$n" ]; then
+            gh issue create --title "Hay actualizaciones de tus herramientas de diseño web" \
+              --label actualizaciones --body-file cuerpo.md
+          elif [ "$(gh issue view "$n" --json body --jq .body)" != "$(cat cuerpo.md)" ]; then
+            gh issue edit "$n" --body-file cuerpo.md
+            gh issue comment "$n" --body "Salió otra versión más nueva: actualicé la lista de arriba."
+          else
+            echo "El issue #$n ya avisa estas versiones."
+          fi
+
+      # Un commit chiquito por mes: GitHub apaga las Actions programadas de
+      # repos públicos que pasan 60 días sin actividad.
+      - name: Anotar fecha del chequeo
+        run: |
+          jq --arg d "$(date -u +%F)" '.ultimo_chequeo = $d' diseno-web/versiones.json > v.tmp
+          mv v.tmp diseno-web/versiones.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add diseno-web/versiones.json
+          git diff --cached --quiet || { git commit -m "Chequeo mensual de versiones de diseño web" && git push; }
+
+  registrar:
+    if: >-
+      github.event_name == 'issues' &&
+      github.event.issue.user.login == 'github-actions[bot]' &&
+      contains(github.event.issue.labels.*.name, 'actualizaciones')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Anotar las versiones del issue
+        env:
+          CUERPO: ${{ github.event.issue.body }}
+        run: bash .github/scripts/registrar-versiones.sh
+
+      - name: Guardar
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add diseno-web/versiones.json
+          if git diff --cached --quiet; then
+            echo "Nada que anotar."
+          else
+            git commit -m "Anotar versiones de diseño web (issue #$ISSUE)"
+            git push
+            gh issue comment "$ISSUE" --body "Listo, anoté estas versiones como las que tenés. Te aviso cuando salgan otras."
+          fi

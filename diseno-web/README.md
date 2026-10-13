@@ -71,10 +71,28 @@ una web, así que los hooks no hacen falta.
 bash ~/claude-skills/diseno-web/actualizar.sh
 ```
 
-Una vez por mes alcanza. Trae la última versión de este repo, de Impeccable,
-UI/UX Pro Max y SkillUI, y refresca el bloque de `CLAUDE.md`. No las dejo en
-actualización automática a propósito: la auditoría vale para las versiones que
-revisé, y así cada actualización es una decisión tuya.
+Trae la última versión de este repo, de Impeccable, UI/UX Pro Max y SkillUI,
+y refresca el bloque de `CLAUDE.md`. No las dejo en actualización automática a
+propósito: la auditoría vale para las versiones que revisé, y así cada
+actualización es una decisión tuya.
+
+### Aviso automático por mail
+
+No hace falta acordarse: la Action
+[`actualizaciones-diseno-web`](../.github/workflows/actualizaciones-diseno-web.yml)
+chequea **el día 1 de cada mes** si salieron versiones nuevas. Si hay, abre un
+issue en este repo (GitHub te lo manda por mail) con qué cambió y los pasos:
+
+1. (Opcional) Pedirle a Claude que revise si los cambios son seguros.
+2. Actualizar: *"actualizá mis herramientas de diseño web"* o `actualizar.sh`.
+3. **Cerrar el issue.** Al cerrarlo, la Action anota esas versiones en
+   [`versiones.json`](versiones.json) y no vuelve a avisar por ellas.
+
+La Action **no actualiza tu Mac**: GitHub no tiene acceso a ella. Solo avisa.
+Para chequear a mano: pestaña *Actions* → *Actualizaciones de diseño web* →
+*Run workflow*. Hace un commit chiquito por mes con la fecha del chequeo, porque
+GitHub apaga las Actions programadas de repos públicos que pasan 60 días sin
+actividad.
 
 ## Verificar
 

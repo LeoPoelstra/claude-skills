@@ -30,3 +30,6 @@ Después cerrá y volvé a abrir Claude escritorio.
 
 O directamente pedíselo a Claude en una sesión en tu Mac:
 *"actualizá mis herramientas de diseño web"*.
+
+Cuando salen versiones nuevas, una GitHub Action abre un issue en este repo y
+te llega el aviso por mail. Detalles en [`diseno-web/README.md`](diseno-web/README.md#aviso-automático-por-mail).
