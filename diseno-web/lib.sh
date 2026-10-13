@@ -49,12 +49,13 @@ impeccable_sin_telemetria() {
   '
 }
 
-# Deja en ~/.claude/CLAUDE.md la versión actual del bloque "Diseño web",
-# reemplazando cualquier versión anterior (con o sin marcas) y sin tocar
-# el resto del archivo.
+# Deja en ~/.claude/CLAUDE.md (o en el archivo que le pases) la versión
+# actual del bloque "Diseño web", reemplazando cualquier versión anterior
+# (con o sin marcas) y sin tocar el resto del archivo.
 actualizar_claude_md() {
-  mkdir -p "$HOME/.claude"
-  touch "$CLAUDE_MD"
+  local destino="${1:-$CLAUDE_MD}"
+  mkdir -p "$(dirname "$destino")"
+  touch "$destino"
   local tmp
   tmp="$(mktemp)"
   # Copia todo menos el bloque viejo y sin líneas en blanco sobrantes al final.
@@ -68,10 +69,10 @@ actualizar_claude_md() {
       while (n > 0 && linea[n] ~ /^[[:space:]]*$/) n--
       for (i = 1; i <= n; i++) print linea[i]
     }
-  ' "$CLAUDE_MD" > "$tmp"
+  ' "$destino" > "$tmp"
   [ -s "$tmp" ] && printf '\n' >> "$tmp"
   cat "$BLOQUE" >> "$tmp"
-  cp "$tmp" "$CLAUDE_MD"
+  cp "$tmp" "$destino"
   rm -f "$tmp"
 }
 

@@ -27,6 +27,7 @@ Después cerrá y volvé a abrir Claude escritorio.
 | Ver si está todo instalado | `bash ~/claude-skills/diseno-web/verificar.sh` |
 | Actualizar (una vez por mes alcanza) | `bash ~/claude-skills/diseno-web/actualizar.sh` |
 | Reinstalar lo que falte | `bash ~/claude-skills/diseno-web/instalar.sh` |
+| Poner el kit dentro de un proyecto (para que ande en la nube) | `bash ~/claude-skills/diseno-web/proyecto.sh <carpeta>` |
 
 O directamente pedíselo a Claude en una sesión en tu Mac:
 *"actualizá mis herramientas de diseño web"*.

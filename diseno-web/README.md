@@ -54,8 +54,34 @@ corrige y recién ahí te dice que está listo.
 Para cambiar el proceso o el estilo por defecto, editá
 `CLAUDE-diseno-web.md` en este repo y corré `actualizar.sh`.
 
-**No funciona en la parte "Chat"** de Claude escritorio ni en sesiones en la
-nube: esas no ven lo que está instalado en tu Mac.
+**No funciona en la parte "Chat"** de Claude escritorio. Las sesiones en la
+nube tampoco ven lo que está instalado en tu Mac: para esas, poné el kit
+dentro del proyecto (abajo).
+
+## Poner el kit dentro de un proyecto
+
+Así anda igual en la nube ☁️, en otra Mac o si alguien más abre el repo:
+
+```bash
+bash ~/claude-skills/diseno-web/proyecto.sh ~/Proyectos/mi-web
+```
+
+O pedíselo a Claude dentro del proyecto: *"poné el kit de diseño web en este
+proyecto"*. Agrega al repo (todo para commitear):
+
+| Archivo | Qué es |
+|---|---|
+| `CLAUDE.md` | El bloque "Diseño web". El resto del archivo no se toca. |
+| `.mcp.json` + `.claude/playwright-mcp.sh` | Playwright. En la Mac usa Chrome; en la nube, el Chromium que ya trae, sin ventana. |
+| `.claude/settings.json` | Activa UI/UX Pro Max y apaga las estadísticas de Impeccable. Lo que ya tenías se mantiene. |
+| `.claude/skills/impeccable/`, `.claude/agents/impeccable-*` | Impeccable en la versión anotada en [`versiones.json`](versiones.json), sin hooks. Su programa (unos 20 MB, distinto en Mac y Linux) no se guarda: lo baja y verifica solo la primera vez. |
+| `.gitignore` | Ignora ese programa y las capturas de Playwright (`.playwright-mcp/`). |
+
+La primera vez que abras el proyecto, Claude te pregunta si confiás en
+Playwright y en UI/UX Pro Max: decí que sí.
+
+Cuando actualices Impeccable (issue mensual), corré `proyecto.sh` de nuevo en
+cada proyecto para dejarlo en la versión nueva.
 
 ## Por qué sin hooks
 

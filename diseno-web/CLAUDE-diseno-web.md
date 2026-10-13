@@ -16,4 +16,5 @@ Estilo por defecto si no digo otra cosa: fondo claro, sans serif, un solo color 
 No apliques este proceso a mails HTML (bloques de SendGrid, dedicated sends) ni a las tareas automáticas del mail (Mesa de Entrada / TM-FGB).
 
 Si te pido "actualizá mis herramientas de diseño web", corré `bash ~/claude-skills/diseno-web/actualizar.sh`.
+Si te pido "poné el kit de diseño web en este proyecto" (o "actualizá el kit de este proyecto"), corré `bash ~/claude-skills/diseno-web/proyecto.sh <raíz del proyecto>` y mostrame qué archivos cambió antes de hacer commit.
 <!-- diseno-web:fin -->

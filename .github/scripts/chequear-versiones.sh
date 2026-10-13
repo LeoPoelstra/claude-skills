@@ -65,6 +65,9 @@ ${filas}
 2. Actualizá. Elegí una de dos:
    - Pedile a Claude: *"actualizá mis herramientas de diseño web"*
    - O en la Terminal: \`bash ~/claude-skills/diseno-web/actualizar.sh\`
+
+   Si cambió Impeccable, actualizá también tus proyectos web: en cada uno pedile a Claude
+   *"actualizá el kit de este proyecto"* (o corré \`proyecto.sh\` sobre esa carpeta) y hacé commit.
 3. **Cerrá este issue.** Al cerrarlo, el repo anota estas versiones como las que tenés
    y no te vuelve a avisar por ellas.
 
