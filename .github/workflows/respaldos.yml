@@ -1,0 +1,40 @@
+# Guarda una copia de cada herramienta de diseño web en los Releases de este
+# repo (uno por herramienta: "Respaldo: ..."). Revisa todos los días y solo
+# copia cuando salió una versión nueva, pisando la copia anterior.
+#
+# Los Releases no se descargan al clonar el repo, así que tu Mac no se llena.
+
+name: Respaldos de herramientas
+
+on:
+  schedule:
+    - cron: "41 9 * * *" # todos los días, 6:41 de Argentina
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: "Volver a copiar todo aunque no haya versión nueva"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: respaldos
+  cancel-in-progress: false
+
+jobs:
+  respaldar:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        herramienta: [playwright-mcp, impeccable, ui-ux-pro-max, skillui]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Respaldar ${{ matrix.herramienta }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORZAR: ${{ inputs.forzar || 'false' }}
+        run: bash .github/scripts/respaldar.sh "${{ matrix.herramienta }}"
